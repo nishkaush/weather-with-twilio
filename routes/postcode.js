@@ -13,7 +13,7 @@ postcodeRouter.post("/", (req, res) => {
       `https://digitalapi.auspost.com.au/locations/v2/points/postcode/${
         req.body.Digits
       }`,
-      { headers: { "AUTH-KEY": "9436ee625b90476fabc6d88fe1d35b5f" } }
+      { headers: { "AUTH-KEY": process.env.auspostkey } }
     )
     .then(re => {
       if (re.data.points[0].geo_location && re.data.points[0].address.suburb) {
@@ -24,9 +24,9 @@ postcodeRouter.post("/", (req, res) => {
     })
     .then(re => {
       return axios.get(
-        `https://api.darksky.net/forecast/4c01a970ef5af31cfa5d6b58ae94165d/${
-          re.lat
-        },${re.lon}?units=si`
+        `https://api.darksky.net/forecast/${process.env.weatherkey}/${re.lat},${
+          re.lon
+        }?units=si`
       );
     })
     .then(re => {
