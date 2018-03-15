@@ -1,5 +1,6 @@
 const express = require("express");
 const axios = require("axios");
+const moment = require("moment");
 const { myPostCodes } = require("./../models/info-schema");
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
 
@@ -57,7 +58,8 @@ module.exports = { postcodeRouter };
 function saveToDB(postcode, suburb) {
   let newPostCode = new myPostCodes({
     postcode,
-    suburb: suburb || ""
+    suburb: suburb || "",
+    created_at: Date.now()
   });
   newPostCode.save();
 }
@@ -71,7 +73,7 @@ function weatherMessage(
 ) {
   if (suburbName) {
     return twiml.say(
-      `The weather forecast for ${suburbName} is ${hourlyForecast} ${dailyForecast}. Thank you for calling. Bye now.`
+      `The weather forecast for ${suburbName} is ${hourlyForecast} ${dailyForecast}. Weather forecast ends. Thank you for calling. Bye now.`
     );
   } else {
     return twiml.say(
